@@ -35,10 +35,10 @@ func _ready():
 
 	timer.start()
 
-	left_right_checkbtn.connect("pressed", self, "redraw", [DrawMode.LEFT_RIGHT])
-	right_left_checkbtn.connect("pressed", self, "redraw", [DrawMode.RIGHT_LEFT])
-	top_down_checkbtn.connect("pressed", self, "redraw", [DrawMode.TOP_DOWN])
-	bottom_up_checkbtn.connect("pressed", self, "redraw", [DrawMode.BOTTOM_UP])
+	left_right_checkbtn.connect("toggled", self, "redraw", [DrawMode.LEFT_RIGHT])
+	right_left_checkbtn.connect("toggled", self, "redraw", [DrawMode.RIGHT_LEFT])
+	top_down_checkbtn.connect("toggled", self, "redraw", [DrawMode.TOP_DOWN])
+	bottom_up_checkbtn.connect("toggled", self, "redraw", [DrawMode.BOTTOM_UP])
 
 	line_width_slider.connect("value_changed", self, "set_line_width")
 
@@ -108,16 +108,14 @@ func gen_line(x, y, color, inverse=false):
 	return Line.new(from, to, color)
 
 
-func redraw(mode):
+func redraw(pressed, mode):
 	clear()
-	horizontal = false
-	vertical = false
 
 	if mode in [DrawMode.LEFT_RIGHT, DrawMode.RIGHT_LEFT]:
-		horizontal = true
+		horizontal = pressed
 
 	if mode in [DrawMode.TOP_DOWN, DrawMode.BOTTOM_UP]:
-		vertical = true
+		vertical = pressed
 
 	timer.start()
 
