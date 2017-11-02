@@ -1,7 +1,6 @@
 extends Node2D
 
 onready var Line = preload("line.gd").Line
-var timer = Timer.new()
 
 var hx = 0
 var hy = 0
@@ -9,15 +8,21 @@ var vx = 0
 var vy = 0
 var horizontal = false
 var vertical = false
+var line_width = 1
 
 var len = null
 var lines = []
+var timer = Timer.new()
+
 onready var vp_size = get_viewport().get_rect().size
 
 onready var left_right_checkbtn = get_node("control/button_group/left_right_checkbtn")
 onready var right_left_checkbtn = get_node("control/button_group/right_left_checkbtn")
 onready var top_down_checkbtn = get_node("control/button_group/top_down_checkbtn")
 onready var bottom_up_checkbtn = get_node("control/button_group/bottom_up_checkbtn")
+
+onready var line_width_slider = get_node("control/line_width_slider")
+onready var line_width_label = get_node("control/line_width_label")
 
 enum DrawMode {LEFT_RIGHT, RIGHT_LEFT, TOP_DOWN, BOTTOM_UP}
 
@@ -29,12 +34,14 @@ func _ready():
 	add_child(timer)
 
 	timer.start()
-	
+
 	left_right_checkbtn.connect("pressed", self, "redraw", [DrawMode.LEFT_RIGHT])
 	right_left_checkbtn.connect("pressed", self, "redraw", [DrawMode.RIGHT_LEFT])
 	top_down_checkbtn.connect("pressed", self, "redraw", [DrawMode.TOP_DOWN])
 	bottom_up_checkbtn.connect("pressed", self, "redraw", [DrawMode.BOTTOM_UP])
-	
+
+	line_width_slider.connect("value_changed", self, "set_line_width")
+
 	len = greatest_common_divisor(int(vp_size.x), int(vp_size.y))
 
 	checkbtns = {
@@ -50,7 +57,7 @@ func _draw():
 	if horizontal:
 		if checkbtns[DrawMode.LEFT_RIGHT].is_pressed():
 			lines.append(gen_line(hx, hy, color))
-	
+
 		if checkbtns[DrawMode.RIGHT_LEFT].is_pressed():
 			lines.append(gen_line(hx, hy, color, true))
 
@@ -64,7 +71,7 @@ func _draw():
 	if vertical:
 		if checkbtns[DrawMode.TOP_DOWN].is_pressed():
 			lines.append(gen_line(vx, vy, color))
-		
+
 		if checkbtns[DrawMode.BOTTOM_UP].is_pressed():
 			lines.append(gen_line(vx, vy, color, true))
 
@@ -74,12 +81,12 @@ func _draw():
 			vx += len
 		if vx >= vp_size.x:
 			vertical = false
-	
+
 	if not horizontal and not vertical:
 		timer.stop()
 
 	for line in lines:
-		draw_line(line.from, line.to, line.color, 4.0)
+		draw_line(line.from, line.to, line.color, line_width)
 
 func gen_line(x, y, color, inverse=false):
 	var from
@@ -99,30 +106,35 @@ func gen_line(x, y, color, inverse=false):
 			from = Vector2(vp_size.x - x, vp_size.y - (y + len))
 			to = Vector2(vp_size.x - (x + len), vp_size.y - y)
 	return Line.new(from, to, color)
-	
-	
+
 
 func redraw(mode):
+	clear()
+	horizontal = false
+	vertical = false
+
+	if mode in [DrawMode.LEFT_RIGHT, DrawMode.RIGHT_LEFT]:
+		horizontal = true
+
+	if mode in [DrawMode.TOP_DOWN, DrawMode.BOTTOM_UP]:
+		vertical = true
+
+	timer.start()
+
+
+func clear():
 	lines.clear()
-	
 	hx = 0
 	hy = 0
 	vx = 0
 	vy = 0
 
-	horizontal = false
-	vertical = false
-	
-	if mode in [DrawMode.LEFT_RIGHT, DrawMode.RIGHT_LEFT]:
-		horizontal = true
-	
-	if mode in [DrawMode.TOP_DOWN, DrawMode.BOTTOM_UP]:
-		vertical = true
-	
-	timer.start()
-#	for key in checkbtns:
-#		if key != mode:
-#			checkbtns[key].set_pressed(false)
+
+func set_line_width(value):
+	line_width = value
+	line_width_label.set_text("Line width: " + str(line_width))
+	clear()
+
 
 func greatest_common_divisor(n, m):
 	var gcd = n

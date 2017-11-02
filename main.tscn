@@ -102,4 +102,41 @@ text = "Bottom - Up"
 flat = false
 align = 0
 
+[node name="line_width_label" type="Label" parent="control"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 42.0
+margin/top = 112.0
+margin/right = 124.0
+margin/bottom = 126.0
+text = "Line width: 1"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="line_width_slider" type="HSlider" parent="control"]
+
+rect/rotation = 0.0815267
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 1.0
+margin/top = 124.0
+margin/right = 158.0
+margin/bottom = 140.0
+range/min = 1.0
+range/max = 10.0
+range/step = 1.0
+range/page = 0.0
+range/value = 1.0
+range/exp_edit = false
+range/rounded = false
+tick_count = 10
+ticks_on_borders = true
+focus_mode = 2
+
 
