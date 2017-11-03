@@ -8,7 +8,7 @@ var vx = 0
 var vy = 0
 var horizontal = false
 var vertical = false
-var line_width = 1
+var line_width = 4
 var update_time = 0.05
 var color = Color(1, 1, 1)
 
