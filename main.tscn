@@ -139,4 +139,41 @@ tick_count = 10
 ticks_on_borders = true
 focus_mode = 2
 
+[node name="timer_label" type="Label" parent="control"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 24.0
+margin/top = 147.0
+margin/right = 140.0
+margin/bottom = 161.0
+text = "Update time: 0.05"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="timer_slider" type="HSlider" parent="control"]
+
+rect/rotation = 0.0815267
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 1.0
+margin/top = 160.0
+margin/right = 158.0
+margin/bottom = 176.0
+range/min = 0.01
+range/max = 0.5
+range/step = 0.01
+range/page = 0.0
+range/value = 0.05
+range/exp_edit = false
+range/rounded = false
+tick_count = 0
+ticks_on_borders = true
+focus_mode = 2
+
 

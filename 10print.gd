@@ -9,6 +9,7 @@ var vy = 0
 var horizontal = false
 var vertical = false
 var line_width = 1
+var update_time = 0.05
 
 var len = null
 var lines = []
@@ -24,23 +25,27 @@ onready var bottom_up_checkbtn = get_node("control/button_group/bottom_up_checkb
 onready var line_width_slider = get_node("control/line_width_slider")
 onready var line_width_label = get_node("control/line_width_label")
 
+onready var timer_slider = get_node("control/timer_slider")
+onready var timer_label = get_node("control/timer_label")
+
 enum DrawMode {LEFT_RIGHT, RIGHT_LEFT, TOP_DOWN, BOTTOM_UP}
 
 var checkbtns = {}
 
 func _ready():
-	timer.set_wait_time(0.05)
+	timer.set_wait_time(update_time)
 	timer.connect("timeout", self, "update")
 	add_child(timer)
 
 	timer.start()
 
-	left_right_checkbtn.connect("toggled", self, "redraw", [DrawMode.LEFT_RIGHT])
-	right_left_checkbtn.connect("toggled", self, "redraw", [DrawMode.RIGHT_LEFT])
-	top_down_checkbtn.connect("toggled", self, "redraw", [DrawMode.TOP_DOWN])
-	bottom_up_checkbtn.connect("toggled", self, "redraw", [DrawMode.BOTTOM_UP])
+	left_right_checkbtn.connect("toggled", self, "redraw")
+	right_left_checkbtn.connect("toggled", self, "redraw")
+	top_down_checkbtn.connect("toggled", self, "redraw")
+	bottom_up_checkbtn.connect("toggled", self, "redraw")
 
 	line_width_slider.connect("value_changed", self, "set_line_width")
+	timer_slider.connect("value_changed", self, "set_update_time")
 
 	len = greatest_common_divisor(int(vp_size.x), int(vp_size.y))
 
@@ -108,15 +113,10 @@ func gen_line(x, y, color, inverse=false):
 	return Line.new(from, to, color)
 
 
-func redraw(pressed, mode):
+func redraw(pressed):
 	clear()
-
-	if mode in [DrawMode.LEFT_RIGHT, DrawMode.RIGHT_LEFT]:
-		horizontal = pressed
-
-	if mode in [DrawMode.TOP_DOWN, DrawMode.BOTTOM_UP]:
-		vertical = pressed
-
+	horizontal = (checkbtns[DrawMode.LEFT_RIGHT].is_pressed() or checkbtns[DrawMode.RIGHT_LEFT].is_pressed())
+	vertical = (checkbtns[DrawMode.TOP_DOWN].is_pressed() or checkbtns[DrawMode.BOTTOM_UP].is_pressed())
 	timer.start()
 
 
@@ -131,6 +131,13 @@ func clear():
 func set_line_width(value):
 	line_width = value
 	line_width_label.set_text("Line width: " + str(line_width))
+	clear()
+
+
+func set_update_time(value):
+	update_time = value
+	timer.set_wait_time(update_time)
+	timer_label.set_text("Update time: " + str(update_time))
 	clear()
 
 
