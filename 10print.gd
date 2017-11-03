@@ -10,6 +10,7 @@ var horizontal = false
 var vertical = false
 var line_width = 1
 var update_time = 0.05
+var color = Color(1, 1, 1)
 
 var len = null
 var lines = []
@@ -27,6 +28,8 @@ onready var line_width_label = get_node("control/line_width_label")
 
 onready var timer_slider = get_node("control/timer_slider")
 onready var timer_label = get_node("control/timer_label")
+
+onready var color_picker = get_node("control/color_picker")
 
 enum DrawMode {LEFT_RIGHT, RIGHT_LEFT, TOP_DOWN, BOTTOM_UP}
 
@@ -47,6 +50,8 @@ func _ready():
 	line_width_slider.connect("value_changed", self, "set_line_width")
 	timer_slider.connect("value_changed", self, "set_update_time")
 
+	color_picker.connect("color_changed", self, "set_color")
+
 	len = greatest_common_divisor(int(vp_size.x), int(vp_size.y))
 
 	checkbtns = {
@@ -57,8 +62,6 @@ func _ready():
 	}
 
 func _draw():
-	var color = Color(1, 1, 1)
-
 	if horizontal:
 		if checkbtns[DrawMode.LEFT_RIGHT].is_pressed():
 			lines.append(gen_line(hx, hy, color))
@@ -110,6 +113,7 @@ func gen_line(x, y, color, inverse=false):
 		else:
 			from = Vector2(vp_size.x - x, vp_size.y - (y + len))
 			to = Vector2(vp_size.x - (x + len), vp_size.y - y)
+
 	return Line.new(from, to, color)
 
 
@@ -138,6 +142,11 @@ func set_update_time(value):
 	update_time = value
 	timer.set_wait_time(update_time)
 	timer_label.set_text("Update time: " + str(update_time))
+	clear()
+
+
+func set_color(c):
+	color = c
 	clear()
 
 

@@ -176,4 +176,21 @@ tick_count = 0
 ticks_on_borders = true
 focus_mode = 2
 
+[node name="color_picker" type="ColorPickerButton" parent="control"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 184.0
+margin/right = 157.0
+margin/bottom = 204.0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+flat = false
+color = Color( 1, 1, 1, 1 )
+edit_alpha = true
+
 
